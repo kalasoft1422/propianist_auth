@@ -27,7 +27,6 @@ const Config = {
     // Android
     //--------------------------------------------------
 
-    APP_DEEP_LINK:
-        "propianist://auth"
+    APP_DEEP_LINK:  "propianist://auth"
 
 };

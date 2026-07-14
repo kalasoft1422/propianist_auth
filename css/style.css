@@ -389,3 +389,49 @@ h1{
 
     font-size:15px;
 }
+
+.successIcon{
+
+    width:88px;
+    height:88px;
+
+    margin:0 auto 24px;
+
+    border-radius:50%;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    font-size:42px;
+
+    color:white;
+
+    background:
+            linear-gradient(
+                    135deg,
+                    #3DDC84,
+                    #28A745);
+
+    box-shadow:
+            0 10px 35px
+            rgba(61,220,132,.35);
+}
+
+.errorIcon{
+
+    background:
+            linear-gradient(
+                    135deg,
+                    #FF6B6B,
+                    #E53935);
+}
+
+.countdown{
+
+    margin-top:24px;
+
+    color:#C9D4E6;
+
+    font-size:15px;
+}

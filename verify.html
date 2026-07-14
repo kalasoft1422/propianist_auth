@@ -8,7 +8,7 @@
     <meta name="viewport"
           content="width=device-width, initial-scale=1.0">
 
-    <title>Email Verification - ProPianist</title>
+    <title>Email Verified • ProPianist</title>
 
     <link rel="stylesheet" href="css/style.css">
 
@@ -33,6 +33,10 @@
 
     <div class="card">
 
+        <div id="icon" class="successIcon">
+            ✓
+        </div>
+
         <h2 id="title">
             Verifying Email...
         </h2>
@@ -41,15 +45,22 @@
                 id="message"
                 class="description">
 
-            Please wait while we verify your email address.
+            Please wait while we verify your email.
+
+        </p>
+
+        <p
+                id="countdown"
+                class="countdown"
+                style="display:none;">
+
+            Opening ProPianist in <span id="seconds">3</span>...
 
         </p>
 
         <div class="buttonGroup">
 
-            <a
-                    id="openButton"
-                    href="propianist://auth"
+          <a  id="openButton"  href="#"
                     class="primaryButton"
                     style="display:none;">
 
@@ -61,6 +72,12 @@
 
     </div>
 
+    <div class="footer">
+
+        © 2026 ProPianist
+
+    </div>
+
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -69,7 +86,7 @@
 
 <script src="js/supabase.js"></script>
 
-<script src="js/reset.js"></script>
+<script src="js/verify.js"></script>
 
 </body>
 
