@@ -333,3 +333,59 @@ h1{
     }
 
 }
+
+
+.form{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:18px;
+
+    margin-top:30px;
+}
+
+.textBox{
+
+    width:100%;
+
+    padding:18px;
+
+    border-radius:16px;
+
+    border:1px solid rgba(255,255,255,.15);
+
+    background:rgba(255,255,255,.05);
+
+    color:white;
+
+    font-size:16px;
+
+    outline:none;
+
+    transition:.2s;
+}
+
+.textBox::placeholder{
+
+    color:#A9B8CF;
+}
+
+.textBox:focus{
+
+    border-color:#4F7CFF;
+
+    box-shadow:0 0 0 4px rgba(79,124,255,.15);
+}
+
+.status{
+
+    margin-top:20px;
+
+    min-height:22px;
+
+    color:#D6DDEA;
+
+    font-size:15px;
+}

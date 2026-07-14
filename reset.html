@@ -8,7 +8,7 @@
     <meta name="viewport"
           content="width=device-width, initial-scale=1.0">
 
-    <title>Email Verification - ProPianist</title>
+    <title>Reset Password • ProPianist</title>
 
     <link rel="stylesheet" href="css/style.css">
 
@@ -34,23 +34,53 @@
     <div class="card">
 
         <h2 id="title">
-            Verifying Email...
+            Reset Password
         </h2>
 
         <p
                 id="message"
                 class="description">
 
-            Please wait while we verify your email address.
+            Enter your new password below.
 
         </p>
+
+        <div class="form">
+
+            <input
+                    id="password"
+                    class="textBox"
+                    type="password"
+                    placeholder="New Password">
+
+            <input
+                    id="confirmPassword"
+                    class="textBox"
+                    type="password"
+                    placeholder="Confirm New Password">
+
+            <button
+                    id="updateButton"
+                    class="primaryButton">
+
+                Update Password
+
+            </button>
+
+        </div>
+
+        <div
+                id="status"
+                class="status">
+
+        </div>
 
         <div class="buttonGroup">
 
             <a
                     id="openButton"
                     href="propianist://auth"
-                    class="primaryButton"
+                    class="secondaryButton"
                     style="display:none;">
 
                 Open ProPianist
@@ -58,6 +88,12 @@
             </a>
 
         </div>
+
+    </div>
+
+    <div class="footer">
+
+        © 2026 ProPianist
 
     </div>
 
