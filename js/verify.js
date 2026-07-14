@@ -2,9 +2,9 @@ window.addEventListener("load", verifyEmail);
 
 async function verifyEmail()
 {
+    const icon = document.getElementById("icon");
     const title = document.getElementById("title");
     const message = document.getElementById("message");
-    const icon = document.getElementById("icon");
     const countdown = document.getElementById("countdown");
     const seconds = document.getElementById("seconds");
     const openButton = document.getElementById("openButton");
@@ -12,55 +12,76 @@ async function verifyEmail()
     try
     {
         //--------------------------------------------------
-        // Check current session
+        // Read URL parameters
         //--------------------------------------------------
 
-        const { data, error } =
-            await supabaseClient.auth.getSession();
+        const params = new URLSearchParams(window.location.search);
+
+        const tokenHash = params.get("token_hash");
+
+        const type = params.get("type");
+
+        if(!tokenHash)
+        {
+            throw new Error("Verification link is invalid.");
+        }
+
+        //--------------------------------------------------
+        // Verify Email
+        //--------------------------------------------------
+
+        const { error } =
+            await supabaseClient.auth.verifyOtp({
+
+                token_hash: tokenHash,
+
+                type: type
+
+            });
 
         if(error)
         {
             throw error;
         }
 
-        if(!data.session)
-        {
-            throw new Error(
-                "Verification link is invalid or has expired.");
-        }
-
         //--------------------------------------------------
-        // Success
+        // Success UI
         //--------------------------------------------------
 
         title.textContent = "Email Verified";
 
         message.textContent =
-            "Your email has been successfully verified. " +
-            "You can now continue learning with ProPianist.";
+            "Your email has been verified successfully. " +
+            "You can now continue using ProPianist.";
 
         countdown.style.display = "block";
 
         openButton.style.display = "block";
 
+        openButton.onclick = function(e)
+        {
+            e.preventDefault();
+
+            window.location.href = Config.APP_DEEP_LINK;
+        };
+
         //--------------------------------------------------
         // Countdown
         //--------------------------------------------------
 
-        let time = 3;
+        let remaining = 3;
 
-        const timer = setInterval(() =>
+        const timer = setInterval(function()
         {
-            time--;
+            remaining--;
 
-            seconds.textContent = time;
+            seconds.textContent = remaining;
 
-            if(time <= 0)
+            if(remaining <= 0)
             {
                 clearInterval(timer);
 
-                window.location.href =
-                    Config.APP_DEEP_LINK;
+                window.location.href = Config.APP_DEEP_LINK;
             }
 
         },1000);
@@ -70,15 +91,19 @@ async function verifyEmail()
         console.error(error);
 
         icon.classList.remove("successIcon");
+
         icon.classList.add("errorIcon");
-        icon.innerHTML = "✕";
+
+        icon.textContent = "✕";
 
         title.textContent = "Verification Failed";
 
         message.textContent =
-            error.message ??
-            "The verification link is invalid or has expired.";
+                error.message ||
+                "Verification link is invalid or has expired.";
 
-        openButton.style.display = "block";
+        countdown.style.display = "none";
+
+        openButton.style.display = "none";
     }
 }
