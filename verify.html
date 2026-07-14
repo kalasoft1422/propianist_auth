@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Email Verification - ProPianist</title>
+
+    <link rel="stylesheet" href="css/style.css">
+
+</head>
+
+<body>
+
+<div class="background"></div>
+
+<div class="container">
+
+    <img
+            src="assets/logo.png"
+            class="logo"
+            alt="ProPianist">
+
+    <h1>ProPianist</h1>
+
+    <p class="tagline">
+        Learn • Practice • Inspire
+    </p>
+
+    <div class="card">
+
+        <h2 id="title">
+            Verifying Email...
+        </h2>
+
+        <p
+                id="message"
+                class="description">
+
+            Please wait while we verify your email address.
+
+        </p>
+
+        <div class="buttonGroup">
+
+            <a
+                    id="openButton"
+                    href="propianist://auth"
+                    class="primaryButton"
+                    style="display:none;">
+
+                Open ProPianist
+
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script src="js/supabase.js"></script>
+
+<script src="js/verify.js"></script>
+
+</body>
+
+</html>
