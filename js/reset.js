@@ -1,52 +1,57 @@
+window.addEventListener("load", initialize);
 
-async function initializeRecovery()
+async function initialize()
 {
     const title = document.getElementById("title");
     const message = document.getElementById("message");
-    const status = document.getElementById("status");
+    const passwordPanel = document.getElementById("passwordPanel");
     const updateButton = document.getElementById("updateButton");
-    const openButton = document.getElementById("openButton");
 
     try
     {
-        //------------------------------------------------------
-        // Read recovery tokens from URL
-        //------------------------------------------------------
+        //--------------------------------------------------
+        // Read URL Parameters
+        //--------------------------------------------------
 
-        const hash = window.location.hash.substring(1);
+        const params = new URLSearchParams(window.location.search);
 
-        const params = new URLSearchParams(hash);
+        const tokenHash = params.get("token_hash");
 
-        const accessToken = params.get("access_token");
-        const refreshToken = params.get("refresh_token");
+        const type = params.get("type");
 
-        if(!accessToken || !refreshToken)
+        if(tokenHash == null)
         {
-            throw new Error(
-                "This password reset link is invalid or has expired.");
+            throw new Error("Recovery link is invalid.");
         }
 
-        //------------------------------------------------------
-        // Create recovery session
-        //------------------------------------------------------
+        //--------------------------------------------------
+        // Verify Recovery Token
+        //--------------------------------------------------
 
         const { error } =
-            await supabaseClient.auth.setSession({
+                await supabaseClient.auth.verifyOtp({
 
-                access_token: accessToken,
+                    token_hash : tokenHash,
 
-                refresh_token: refreshToken
+                    type : type
 
-            });
+                });
 
         if(error)
         {
             throw error;
         }
 
-        //------------------------------------------------------
-        // Enable Update Button
-        //------------------------------------------------------
+        //--------------------------------------------------
+        // Enable Password UI
+        //--------------------------------------------------
+
+        title.textContent = "Create New Password";
+
+        message.textContent =
+                "Enter your new password below.";
+
+        passwordPanel.style.display = "block";
 
         updateButton.onclick = updatePassword;
     }
@@ -57,98 +62,100 @@ async function initializeRecovery()
         title.textContent = "Reset Failed";
 
         message.textContent =
-            error.message ??
-            "The recovery link is invalid or has expired.";
+                error.message ??
+                "Recovery link is invalid or has expired.";
 
-        updateButton.disabled = true;
+        passwordPanel.style.display = "none";
     }
 }
 
 async function updatePassword()
 {
     const password =
-        document.getElementById("password").value.trim();
+            document.getElementById("password").value;
 
-    const confirm =
-        document.getElementById("confirmPassword").value.trim();
-
-    const status =
-        document.getElementById("status");
-
-    const title =
-        document.getElementById("title");
+    const confirmPassword =
+            document.getElementById("confirmPassword").value;
 
     const message =
-        document.getElementById("message");
-
-    const updateButton =
-        document.getElementById("updateButton");
-
-    const openButton =
-        document.getElementById("openButton");
-
-    status.textContent = "";
-
-    //------------------------------------------------------
-    // Validation
-    //------------------------------------------------------
+            document.getElementById("message");
 
     if(password.length < 6)
     {
-        status.textContent =
-            "Password must contain at least 6 characters.";
+        message.textContent =
+                "Password must be at least 6 characters.";
 
         return;
     }
 
-    if(password !== confirm)
+    if(password !== confirmPassword)
     {
-        status.textContent =
-            "Passwords do not match.";
+        message.textContent =
+                "Passwords do not match.";
 
         return;
     }
+
+    const updateButton =
+            document.getElementById("updateButton");
 
     updateButton.disabled = true;
 
     updateButton.textContent = "Updating...";
 
-    //------------------------------------------------------
-    // Update Password
-    //------------------------------------------------------
-
-    const { error } =
-        await supabaseClient.auth.updateUser({
-
-            password: password
-
-        });
-
-    if(error)
+    try
     {
-        status.textContent = error.message;
+        const { error } =
+                await supabaseClient.auth.updateUser({
+
+                    password : password
+
+                });
+
+        if(error)
+        {
+            throw error;
+        }
+
+        document.getElementById("title").textContent =
+                "Password Updated";
+
+        document.getElementById("message").textContent =
+                "Your password has been updated successfully. You can now return to ProPianist and sign in.";
+
+        document.getElementById("passwordPanel").style.display =
+                "none";
+
+        const openButton =
+                document.getElementById("openButton");
+
+        openButton.style.display = "block";
+
+        openButton.onclick = function(e)
+        {
+            e.preventDefault();
+
+            window.location.href =
+                    Config.APP_DEEP_LINK;
+        };
+
+        setTimeout(function()
+        {
+            window.location.href =
+                    Config.APP_DEEP_LINK;
+
+        },3000);
+    }
+    catch(error)
+    {
+        console.error(error);
 
         updateButton.disabled = false;
 
         updateButton.textContent = "Update Password";
 
-        return;
+        message.textContent =
+                error.message ??
+                "Failed to update password.";
     }
-
-    //------------------------------------------------------
-    // Success
-    //------------------------------------------------------
-
-    title.textContent = "🎉 Password Updated";
-
-    message.textContent =
-        "Your password has been updated successfully.";
-
-    status.textContent = "";
-
-    document.querySelector(".form").style.display = "none";
-
-    openButton.style.display = "block";
 }
-
-initializeRecovery();
